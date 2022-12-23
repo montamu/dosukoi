@@ -20,7 +20,7 @@ const links = [
   {
     id: 4, 
     name: '新規登録',
-    to: '/'
+    to: '/signup'
   },
 ]
 

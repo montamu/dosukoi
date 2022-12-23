@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import Home from "./routes/home";
+import SignUp from './routes/signup';
 import reportWebVitals from './reportWebVitals';
 import {
   createBrowserRouter,
@@ -12,6 +13,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
   },
 ]);
 
