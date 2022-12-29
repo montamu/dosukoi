@@ -38,6 +38,14 @@ const SignUp = () => {
                 <div>
                   <input className={styles.input} type="radio" id="female" name="gender" value="f"/>
                   <label htmlFor="female">女性</label>
+                </div> 
+                <div>
+                  <input className={styles.input} type="radio" id="female" name="gender" value="f"/>
+                  <label htmlFor="female">ひみつ</label>
+                </div>
+                <div>
+                  <input className={styles.input} type="radio" id="female" name="gender" value="f"/>
+                  <label htmlFor="female">その他</label>
                 </div>
             </div>
             <div className={styles.item}>
