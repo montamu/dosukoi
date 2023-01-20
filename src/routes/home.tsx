@@ -3,7 +3,10 @@ import AppBar from '../components/appBar'
 const Home = () => {
   return (
     <>
-      <AppBar />   
+      <AppBar />
+      <div>
+        
+      </div>
     </>
   );
 }
