@@ -15,7 +15,7 @@ const links = [
   {
     id: 3,
     name: 'ログイン',
-    to: '/'
+    to: '/signin'
   },
   {
     id: 4, 
