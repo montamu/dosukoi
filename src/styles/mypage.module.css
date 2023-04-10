@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: 5vh auto;
+  justify-content: center;
+  align-items: center;
+  padding: 0 15%;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 450px;
+  border: thin solid black;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  border-radius: 8px;
+}
+
+.imgdiv {
+  text-align: center;
+}
+
+.usericon {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+}
+
+.username {
+  font-size: xx-large;
+  text-align: center;
+  margin-top: 1vh;
+  margin-bottom: 2vh;
+}
+
+.userdata {
+  font-size: large;
+  padding-left: 2vw;
+  margin-bottom: 1vh;
+}

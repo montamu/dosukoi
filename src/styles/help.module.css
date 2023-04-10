@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  margin: 5vh auto;
+  width: 70vw;
+  justify-content: center;
+  align-items: center;
+}
+
+.text {
+  border: thin solid black;
+  width: 60vw;
+  margin-top: 10vh;
+  padding: 15px;
+}

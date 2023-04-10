@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 10vh;
+  border-bottom: thin solid black;
+  width: 100%;
+}
+
+.element {
+  display: flex;
+  padding: 0 2vw;
+}
+
+.element:first-of-type {
+  margin-right: auto;
+}
+
+.link {
+  text-decoration: none;
+  color: #333333;
+}
+
+.link:hover {
+  color: #a9a9a9;
+}
+
+.link:active {
+  color: #14cef7;
+}
+
+.user {
+  cursor: pointer;
+  border-radius: 50%;
+}
