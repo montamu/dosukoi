@@ -3,6 +3,7 @@ import dosukoi from "../images/kodomozumo.png";
 import styles from "../styles/home.module.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 type Article = {
   author: string,
@@ -22,43 +23,19 @@ const Home = () => {
   const [ articles, setArticles ] = useState<Article[]>();
   // author, publishedAt, title, url 
 
-  const getNews = () => {
-    axios.get(`https://newsapi.org/v2/top-headlines?country=jp&apiKey=${process.env.REACT_APP_FIREBASE_NEWSAPIKEY}`)
-    .then(res => {
-      console.log("元の記事");
-      console.log(res.data.articles);
-      const articles = res.data.articles.map((article: Article) =>{
-        const article_deepcopy = JSON.parse(JSON.stringify(article));
-        article_deepcopy.title = removeAuthorFromTitle(article.title);
-        article_deepcopy.publishedAt = shapingPublishedAt(article.publishedAt);
-        return article_deepcopy;
-      })
-      console.log("タイトル修正後の記事");
-      console.log(articles);
-      setArticles(articles);
+  const functions = getFunctions();
+  const getNews = httpsCallable(functions, 'getNews');
+  
+
+  const callGetNews = () => {
+    getNews()
+    .then((result) => {
+      const data = result.data;
+      console.log(data);
     });
   }
 
-  // タイトルから出版社の名前を消す関数
-  const removeAuthorFromTitle = (title: string): string => {
-    if (title.includes("｜")) {
-      return title.slice(0, title.indexOf("｜"));
-    }
-    else if (title.includes("-")) {
-      return title.slice(0, title.indexOf("-")-1);
-    }
-    else {
-      return title;
-    }
-  }
-
-
-  // 発行日を年月日表示にする関数
-  const shapingPublishedAt = (publishedAt: string): string => {
-    return publishedAt.slice(0, 4) + "年" + publishedAt.slice(5, 7) + "月" + publishedAt.slice(8, 10) + "日";
-  }
-
-  useEffect(getNews, []);
+  useEffect(callGetNews, []);
 
   return (
     <>

@@ -11,13 +11,13 @@ import { getStorage } from "firebase/storage";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTHDOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECTID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGEBUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGINGSENDERID,
-  appId: process.env.REACT_APP_FIREBASE_APPID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENTID
+  apiKey: "AIzaSyCVStSdvUT1rrhlGZowYvef4-wRcrxw6V8",
+  authDomain: "dosukoi-16815.firebaseapp.com",
+  projectId: "dosukoi-16815",
+  storageBucket: "dosukoi-16815.appspot.com",
+  messagingSenderId: "110630163115",
+  appId: "1:110630163115:web:a8fbccde8830f644f39dee",
+  measurementId: "G-Q94NR7ZCRK"
 };
 
 // Initialize Firebase
@@ -34,22 +34,3 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 export { firebaseConfig, auth, db, storage};
-
-exports.processPayment = functions
-  // Make the secret available to this function
-  .runWith({ secrets: [
-    "REACT_APP_FIREBASE_APIKEY", 
-    "REACT_APP_FIREBASE_AUTHDOMAIN",
-    "REACT_APP_FIREBASE_PROJECTID",
-    "REACT_APP_FIREBASE_STORAGEBUCKET",
-    "REACT_APP_FIREBASE_MESSAGINGSENDERID",
-    "REACT_APP_FIREBASE_APPID",
-    "REACT_APP_FIREBASE_MEASUREMENTID",
-    "REACT_APP_FIREBASE_NEWSAPIKEY"] })
-  .onCall((data, context) => {
-    const myBillingService = initializeBillingService(
-      // reference the secret value
-      process.env.SECRET_NAME
-    );
-    // Process the payment
-  });
