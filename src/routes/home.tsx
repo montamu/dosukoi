@@ -1,9 +1,9 @@
 import AppBar from '../components/appBar'
 import dosukoi from "../images/kodomozumo.png";
 import styles from "../styles/home.module.css";
-import axios from "axios";
 import { useState, useEffect } from "react";
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { httpsCallable, /* connectFunctionsEmulator */ } from "firebase/functions";
+import { functions } from "../firebase";
 
 type Article = {
   author: string,
@@ -19,23 +19,54 @@ type Article = {
   urlToImage: string | null
 };
 
+// タイトルから出版社の名前を消す関数
+const removeAuthorFromTitle = (title: string): string => {
+  if (title.includes("｜")) {
+    return title.slice(0, title.indexOf("｜"));
+  } else if (title.includes("-")) {
+    return title.slice(0, title.indexOf("-")-1);
+  } else {
+    return title;
+  }
+};
+
+// 発行日を年月日表示にする関数
+const shapingPublishedAt = (publishedAt: string): string => {
+  return (
+    publishedAt.slice(0, 4) + "年" +
+    publishedAt.slice(5, 7) + "月" +
+    publishedAt.slice(8, 10) + "日"
+  );
+};
+
 const Home = () => {
   const [ articles, setArticles ] = useState<Article[]>();
   // author, publishedAt, title, url 
 
-  const functions = getFunctions();
+  // if emulating, use this.
+  // connectFunctionsEmulator(functions, "localhost", 5001);
+
   const getNews = httpsCallable(functions, 'getNews');
-  
 
-  const callGetNews = () => {
+  useEffect(() => {
     getNews()
-    .then((result) => {
-      const data = result.data;
-      console.log(data);
-    });
-  }
-
-  useEffect(callGetNews, []);
+      .then(response => {
+        const data: any = response.data;
+        const articles = data.map((article: Article) =>{
+          const articleDeepCopy = JSON.parse(JSON.stringify(article));
+          articleDeepCopy.title = removeAuthorFromTitle(article.title);
+          articleDeepCopy.publishedAt = shapingPublishedAt(article.publishedAt);
+          return articleDeepCopy;
+        });
+        setArticles(articles);
+        console.log("GET NEWS");
+      })
+      .catch(error => {
+        console.log(error);
+      });
+      // eslintの警告を無視
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -48,8 +79,8 @@ const Home = () => {
           {articles && 
             articles.map(article => { 
               return(
-                <a href={article.url}>
-                  <div className={styles.article} key={article.title}>
+                <a href={article.url} key={article.title}>
+                  <div className={styles.article} >
                     <div className={styles.sub}>
                       <div className={styles.element}>{article.publishedAt}</div>
                       <div className={styles.element}>{article.author}</div>

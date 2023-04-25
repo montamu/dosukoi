@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getFunctions } from "firebase/functions";
 import { getStorage } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -33,4 +34,6 @@ const db = getFirestore(app);
 // Initialize Cloud Storage and get a reference to the service
 const storage = getStorage(app);
 
-export { firebaseConfig, auth, db, storage};
+const functions = getFunctions(app, "asia-northeast2");
+
+export { firebaseConfig, auth, db, storage, functions };
