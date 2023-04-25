@@ -27,16 +27,22 @@ const Mypage = () => {
     <>
       <AppBar />
       <div className={styles.container}>
-        {user && users && user.photoURL &&
           <div className={styles.profile}>
-            <div className={styles.imgdiv}>
-              <img className={styles.usericon} src={user.photoURL} alt="プロフィール画像"></img>
-            </div>
-            <div className={styles.username}>{user.displayName}</div>
-            <div className={styles.userdata}>誕生日：{users[0].birthday}</div>
-            <div className={styles.userdata}>性別：{users[0].gender}</div>
+            {user && user.photoURL && 
+              <div className={styles.imgdiv}>
+                <img className={styles.usericon} src={user.photoURL} alt="プロフィール画像"></img>
+              </div>
+            }
+            {user && 
+              <div className={styles.username}>{user.displayName}</div>
+            }
+            {users && 
+              <div className={styles.userdata}>誕生日：{users[0].birthday}</div>
+            }
+            {users && 
+              <div className={styles.userdata}>性別：{users[0].gender}</div>
+            }
           </div>
-        }
       </div>
     </>
   );
