@@ -156,22 +156,32 @@ const SignupForm = () => {
               // Handle successful uploads on complete
               // For instance, get the download URL: https://firebasestorage.googleapis.com/...
               getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                setImageURL(downloadURL);
-                console.log('File available at', downloadURL);
+                // ユーザープロフィールの更新（名前、プロフィール画像URL）
+                updateProfile(user, {
+                  displayName: username, photoURL: downloadURL
+                }).then(() => {
+                  console.log("Profile updated!");
+                }).catch((error) => {
+                  console.error("An error occurred", error);
+                  setError(true);
+                  return false;
+                });
               });
             });
           }
-
-        // ユーザープロフィールの更新（名前、プロフィール画像URL）
-        updateProfile(user, {
-          displayName: username, photoURL: imageURL
-        }).then(() => {
-          console.log("Profile updated!");
-        }).catch((error) => {
-          console.error("An error occurred", error);
-          setError(true);
-          return false;
-        });
+        else {
+          // ユーザープロフィールの更新（名前、プロフィール画像URL）
+          updateProfile(user, {
+            displayName: username, photoURL: imageURL
+          }).then(() => {
+            console.log("Profile updated!");
+          }).catch((error) => {
+            console.error("An error occurred", error);
+            setError(true);
+            return false;
+          });
+        }
+        
         
         // 追加のユーザー情報の登録（誕生日、性別、作成日時、ユーザーID）
         setDoc(doc(db, "users", user.uid), {
