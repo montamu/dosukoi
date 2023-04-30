@@ -23,7 +23,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribed = auth.onAuthStateChanged((user) => {
-      console.log(user);
       setUser(user);
       setLoading(false);
     });

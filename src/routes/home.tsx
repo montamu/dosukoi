@@ -43,9 +43,6 @@ const Home = () => {
   const [ articles, setArticles ] = useState<Article[]>();
   // author, publishedAt, title, url 
 
-  // if emulating, use this.
-  // connectFunctionsEmulator(functions, "localhost", 5001);
-
   const getNews = httpsCallable(functions, 'getNews');
 
   useEffect(() => {
@@ -73,7 +70,7 @@ const Home = () => {
       <AppBar />
       <div className={styles.container}>
         <h1>ここはトップページだよ！</h1>
-        <h4>まだこのサイトは開発途中です！<br/>今後の予定については「ヘルプ」を見てね！</h4>
+        <h4>昨日のニュースを確認できるよ！<br/>今後のアップデート予定については「ヘルプ」を見てね！</h4>
         <img className={styles.dosukoi} src={dosukoi} alt="dosukoi"/>
         <div className={styles.news}>
           {articles && 

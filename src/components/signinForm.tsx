@@ -24,19 +24,10 @@ const SigninForm = () => {
     event.preventDefault();
 
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log("ログインに成功しました！")
-        console.log("ログインしたユーザーの情報です：" + user);
+      .then(() => {
         navigate("/");
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error("ログインに失敗しました");
-        console.error(errorCode);
-        console.error(errorMessage);
+      .catch(() => {
         setSubmitError(true);
       });
     

@@ -8,7 +8,7 @@ const Help = () => {
       <AppBar />
       <div className={styles.container}>
         <div className={styles.text}>
-          このサイトはReact(Typescript)とFirebaseで作られたアプリです<br /><br />
+          このサイトはReact(Typescript)とFirebaseで作られたWebアプリです<br /><br />
 
           現在Githubで全コードを公開しているので誰でも見ることが出来ます。
           <a href="https://github.com/montamu/dosukoi">(https://github.com/montamu/dosukoi)</a><br /><br />
@@ -18,7 +18,7 @@ const Help = () => {
           ２．ログインしているユーザーだけが<Link to="/mypage">マイページ</Link>にアクセスできる<br />
           ３．昨日のニュースのまとめをチェックできる。その記事をクリックすると直接見れます。<br /><br />
 
-          今後はユーザーに興味のあるキーワードをいくつか選んでもらい、それに関係するニュースを表示するニュースアプリとして引き続き作っていこうと思っています。<br /><br />
+          今後は見た目をもっと良くしたり、各ユーザーにおすすめのニュースを表示させたりしようと思っています。<br /><br />
           また、別のプロジェクトとして「ゲーム募集ドットコム（仮）」というTwitter上で一緒にゲームする人を募集するアプリを企画中です。<br />
         </div>
       </div>

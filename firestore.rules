@@ -1,9 +1,37 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if 
-      	request.time < timestamp.date(2023, 6, 1);
+
+    // サインインの認証
+    function isAuthenticated() {
+      return request.auth != null;
     }
+
+    // 本人の認証
+    function isUserAuthenticated(userId) {
+      return isAuthenticated() && userId == request.auth.uid;
+    }
+
+    // ユーザーデータのスキーマ検証
+    function isValidUser(user) {
+      return user.size() == 4
+      && 'userId' in user && user.userId is string
+      && 'createdAt' in user && user.createdAt is timestamp
+      && 'birthday' in user && user.birthday is string
+      && 'gender' in user && user.gender is string;
+    }
+
+    match /users/{userId} {
+      
+      // ユーザー情報の取得のルール
+      allow read: if isAuthenticated();
+
+      // ユーザー情報の作成のルール
+      allow create: if isUserAuthenticated(userId)
+      && isValidUser(request.resource.data)
+      && request.resource.data.userId == userId;
+      
+    }
+
   }
 }
