@@ -1,13 +1,9 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getFunctions } from "firebase/functions";
-import { getStorage } from "firebase/storage";
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, /* connectAuthEmulator */ } from "firebase/auth";
+import { getFirestore, /* connectFirestoreEmulator */ } from "firebase/firestore";
+import { getFunctions, /* connectFunctionsEmulator */ } from "firebase/functions";
+import { getStorage, /* connectStorageEmulator */ } from "firebase/storage";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -21,19 +17,24 @@ const firebaseConfig = {
   measurementId: "G-Q94NR7ZCRK"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
 // const analytics = getAnalytics(app);
 
-// Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
+// エミュレーターを使うときは、この下の１行をアンコメントする
+// connectAuthEmulator(auth, "http://localhost:9099");
 
-// Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
+// エミュレーターを使うときは、この下の１行をアンコメントする
+// connectFirestoreEmulator(db, 'localhost', 8000);
 
-// Initialize Cloud Storage and get a reference to the service
 const storage = getStorage(app);
+// エミュレーターを使うときは、この下の１行をアンコメントする
+// connectStorageEmulator(storage, "localhost", 9199);
 
 const functions = getFunctions(app, "asia-northeast2");
+// エミュレーターを使うときは、この下の１行をアンコメントする
+// connectFunctionsEmulator(functions, "localhost", 5001);
 
 export { firebaseConfig, auth, db, storage, functions };

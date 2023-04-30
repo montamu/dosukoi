@@ -1,8 +1,29 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if false;
+
+    // サインインの認証
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    match /images/{imageId} {
+      // 読み取りは常に許可
+      allow read;
+
+      // 書き込みの条件は、
+      // １．ログインユーザー
+      // ２．ファイル容量5MB未満
+      // ３．imageファイル(jpeg,pngなど)
+      allow write: if isAuthenticated()
+      && request.resource.size < 5 * 1024 * 1024
+      && request.resource.contentType.matches('image/.*');
+      
+    }
+
+    match /default/{imageId} {
+      allow read;
+      allow write: if false;
     }
   }
 }

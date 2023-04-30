@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const SignupForm = () => {
   // 処理が終わったらホーム画面に飛ばすための準備
@@ -75,15 +75,15 @@ const SignupForm = () => {
     setTermsOfService(event.currentTarget.value);
   };
 
-  const gsReference = ref(storage, `gs://${firebaseConfig.storageBucket}/user-icon.png`);
+  const gsReference = ref(storage, `gs://${firebaseConfig.storageBucket}/default/user-icon.png`);
 
   getDownloadURL(gsReference)
-  .then((url) => {
-    setImageURL(url);
-  })
-  .catch((error) => {
-    console.error(error);  
-  });
+    .then((url) => {
+      setImageURL(url);
+    })
+    .catch((error) => {
+      console.error(error);  
+    });
 
   // ファイル選択時にプレビューを表示するようにする
   const [ previewURL, setPreviewURL ] = useState<string>("");
@@ -117,91 +117,92 @@ const SignupForm = () => {
       return false;
     }
   
-    // プロフィール画像のアップロード
-    if (file) {
-      const userImageRef = ref(storage, "images/" + file.name);
-      const uploadTask = uploadBytesResumable(userImageRef, file);
-
-      // Register three observers:
-      // 1. 'state_changed' observer, called any time the state changes
-      // 2. Error observer, called on failure
-      // 3. Completion observer, called on successful completion
-      uploadTask.on('state_changed',
-        (snapshot) => {
-          // Observe state change events such as progress, pause, and resume
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-          }
-        },
-        (error) => {
-          console.error("画像のアップロードが失敗しました" + error);
-          setError(true);
-          return false;
-        },
-        () => {
-          // Handle successful uploads on complete
-          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImageURL(downloadURL);
-            console.log('File available at', downloadURL);
-          });
-        });
-      }
-  
     // ユーザーの新規登録（サインアップ）
     createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      console.log(user);
-  
-      // ユーザープロフィールの更新（名前、プロフィール画像URL）
-      updateProfile(user, {
-        displayName: username, photoURL: imageURL
-      }).then(() => {
-        console.log("Profile updated!");
-      }).catch((error) => {
-        console.error("An error occurred", error);
-        setError(true);
-        return false;
-      });
-      
-      // 追加のユーザー情報の登録（ユーザーID、誕生日、性別）
-      addDoc(collection(db, "users"), {
-        userId: user.uid,
-        birthday,
-        gender
-      })
-      .then((docRef) => {
-        console.log(docRef.id);
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+    
+        // プロフィール画像のアップロード
+        if (file) {
+          const userImageRef = ref(storage, "images/" + file.name);
+          const uploadTask = uploadBytesResumable(userImageRef, file);
+
+          // Register three observers:
+          // 1. 'state_changed' observer, called any time the state changes
+          // 2. Error observer, called on failure
+          // 3. Completion observer, called on successful completion
+          uploadTask.on('state_changed',
+            (snapshot) => {
+              // Observe state change events such as progress, pause, and resume
+              // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload is ' + progress + '% done');
+              switch (snapshot.state) {
+                case 'paused':
+                  console.log('Upload is paused');
+                  break;
+                case 'running':
+                  console.log('Upload is running');
+                  break;
+              }
+            },
+            (error) => {
+              console.error("画像のアップロードが失敗しました" + error);
+              setError(true);
+              return false;
+            },
+            () => {
+              // Handle successful uploads on complete
+              // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                setImageURL(downloadURL);
+                console.log('File available at', downloadURL);
+              });
+            });
+          }
+
+        // ユーザープロフィールの更新（名前、プロフィール画像URL）
+        updateProfile(user, {
+          displayName: username, photoURL: imageURL
+        }).then(() => {
+          console.log("Profile updated!");
+        }).catch((error) => {
+          console.error("An error occurred", error);
+          setError(true);
+          return false;
+        });
+        
+        // 追加のユーザー情報の登録（誕生日、性別、作成日時、ユーザーID）
+        setDoc(doc(db, "users", user.uid), {
+          birthday,
+          gender,
+          createdAt: serverTimestamp(),
+          userId: user.uid
+        })
+        .then((docRef) => {
+          console.log(docRef);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+          setError(true);
+          return false;
+        });
+    
+        // 全ての処理が成功したらホーム画面に飛ばす
+        navigate("/");
       })
       .catch((error) => {
-        console.error("Error adding document: ", error);
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("以下、サインアップエラーの内容");
+        console.error(errorCode);
+        console.error(errorMessage);
+        console.log("以上、サインアップエラーの内容");
         setError(true);
         return false;
       });
-  
-      // 全ての処理が成功したらホーム画面に飛ばす
-      navigate("/");
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log("以下、サインアップエラーの内容");
-      console.error(errorCode);
-      console.error(errorMessage);
-      console.log("以上、サインアップエラーの内容");
-      setError(true);
-      return false;
-    });
-  };
+    };
 
   return (
     <div className={styles.container}>

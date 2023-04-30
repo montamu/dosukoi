@@ -18,8 +18,11 @@ const Mypage = () => {
       setUsers(
         querySnapshot.docs.map((doc) => doc.data())
       );
-      console.log(querySnapshot.docs.map((doc) => doc.data()));
-    });
+      // console.log(querySnapshot.docs.map((doc) => doc.data()));
+    })/* .catch(error => {
+      console.error(error);
+      console.log("プロフィール情報が取得できませんでした")
+    }) */;
   }, [user?.uid]);
   
 
